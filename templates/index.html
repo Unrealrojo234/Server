@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lan="en">
+    <head>
+        <title>Happy Birthday</title>
+        <!-- Bootstrap CSS v5.2.1 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+
+        <!-- Google font--> 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Crafty+Girls&display=swap" rel="stylesheet">
+
+    </head>
+    <style>
+        body{
+            background-color:{{bg}};
+
+            
+        }
+        .crafty-girls-regular {
+            font-family: "Crafty Girls", cursive;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+
+    </style>
+    <body class="container-fluid">
+        <h1 class="crafty-girls-regular">Happy Birthday {{receiver }}!</h1>
+        <h1 class="crafty-girls-regular">Celebrate your {{age}}th birthday and I wish you many more</h1>
+        
+        <p class="crafty-girls-regular">From: <strong>{{sender}}</stromg></p>
+        <div class="text-center">
+            <button class="btn btn-success" id="startConfettiButton" >GIFT</button>
+
+        </div>
+
+        <canvas  id="confettiCanvas">
+
+        </canvas>
+        <p>&copy;2024 Rojo's Ltd | All Rights Reserved.</p>
+        <script>
+            const canvas = document.getElementById("confettiCanvas");
+            const ctx = canvas.getContext("2d");
+            const button = document.getElementById("startConfettiButton");
+
+            // Resize canvas to cover the full screen
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const colors = ["#ff0", "#f0f", "#0ff", "#ff6347", "#32cd32", "#4682b4"];
+
+            class Confetti {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 5 + 5; // random size between 5 and 10
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.speed = Math.random() * 3 + 2; // random speed between 2 and 5
+                this.angle = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 0.1 - 0.05; // spin speed
+            }
+
+            update() {
+                this.x += Math.cos(this.angle) * this.speed;
+                this.y += Math.sin(this.angle) * this.speed;
+                this.angle += this.rotationSpeed;
+
+                // Reset if the confetti moves off the screen
+                if (
+                this.y > canvas.height ||
+                this.x > canvas.width ||
+                this.x < 0 ||
+                this.y < 0
+                ) {
+                this.x = Math.random() * canvas.width;
+                this.y = -10; // reset to top
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+            }
+
+            // Create an array to hold all the confetti particles
+            let confettiArray = [];
+
+            // Generate random confetti particles
+            function createConfetti(x, y) {
+            for (let i = 0; i < 2000; i++) {
+                confettiArray.push(new Confetti(x, y));
+            }
+            }
+
+            // Render the confetti particles on the canvas
+            function renderConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < confettiArray.length; i++) {
+                confettiArray[i].update();
+                confettiArray[i].draw();
+            }
+            requestAnimationFrame(renderConfetti); // Continue animation
+            }
+
+                  
+            
+            // Event listener for the button
+            button.addEventListener("click", (e) => {
+                //Code to be executed
+                createConfetti(e.clientX, e.clientY);
+                renderConfetti();
+            });
+
+            // Resize the canvas if the window size changes
+            window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            });
+
+        
+        </script>
+    </body>
+</html>
